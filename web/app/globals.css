@@ -1,0 +1,183 @@
+/* Tokens are OKLCH. Light is the committed default; dark is a real second theme,
+   not an inversion. Every colour is defined on bare :root first so that neither a
+   media query nor a [data-theme] block is the sole definition of anything. */
+:root {
+  --bg: oklch(1 0 0);
+  --surface: oklch(0.981 0.0015 110);
+  --surface-2: oklch(0.962 0.002 110);
+  --ink: oklch(0.22 0.014 110);
+  --ink-2: oklch(0.36 0.014 110);
+  --muted: oklch(0.505 0.016 110);
+  --rule: oklch(0.9 0.008 110);
+  --rule-strong: oklch(0.8 0.01 110);
+  --primary: oklch(0.5 0.088 110);
+  --primary-soft: oklch(0.95 0.03 110);
+
+  /* Wong palette: colourblind-safe. Series also carry dash patterns and direct
+     labels, so nothing depends on hue alone. */
+  --d-blue: #0072b2;
+  --d-vermillion: #d55e00;
+  --d-green: #009e73;
+  --d-orange: #e69f00;
+  --d-grey: oklch(0.68 0.006 110);
+
+  --shade: color-mix(in oklch, var(--primary) 7%, transparent);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 0.9375rem;
+  --step-1: 1.125rem;
+  --step-2: 1.35rem;
+  --step-3: 1.62rem;
+  --step-4: 2rem;
+  --step-5: 2.6rem;
+
+  --z-sticky: 100;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --bg: oklch(0.185 0.008 110);
+    --surface: oklch(0.225 0.009 110);
+    --surface-2: oklch(0.265 0.01 110);
+    --ink: oklch(0.94 0.008 110);
+    --ink-2: oklch(0.84 0.008 110);
+    --muted: oklch(0.72 0.012 110);
+    --rule: oklch(0.34 0.01 110);
+    --rule-strong: oklch(0.45 0.012 110);
+    --primary: oklch(0.78 0.1 110);
+    --primary-soft: oklch(0.3 0.03 110);
+    /* Fully-saturated data hues vibrate on a dark ground; desaturate slightly. */
+    --d-blue: #4ea3d8;
+    --d-vermillion: #f08a4b;
+    --d-green: #3fbf9c;
+    --d-orange: #f0c05a;
+    --d-grey: oklch(0.6 0.006 110);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: oklch(0.185 0.008 110);
+  --surface: oklch(0.225 0.009 110);
+  --surface-2: oklch(0.265 0.01 110);
+  --ink: oklch(0.94 0.008 110);
+  --ink-2: oklch(0.84 0.008 110);
+  --muted: oklch(0.72 0.012 110);
+  --rule: oklch(0.34 0.01 110);
+  --rule-strong: oklch(0.45 0.012 110);
+  --primary: oklch(0.78 0.1 110);
+  --primary-soft: oklch(0.3 0.03 110);
+  --d-blue: #4ea3d8;
+  --d-vermillion: #f08a4b;
+  --d-green: #3fbf9c;
+  --d-orange: #f0c05a;
+  --d-grey: oklch(0.6 0.006 110);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern" 1;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  line-height: 1.18;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+  font-weight: 620;
+}
+h1 { font-size: var(--step-5); letter-spacing: -0.028em; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-1); }
+p { margin: 0 0 0.85em; max-width: 72ch; text-wrap: pretty; }
+
+a {
+  color: var(--primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+
+/* Numbers are the content. Tabular figures, right alignment, fixed precision. */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  text-align: right;
+  white-space: nowrap;
+}
+.unit { color: var(--muted); font-weight: 400; }
+
+section { padding-block: clamp(2.5rem, 5vw, 4rem); border-top: 1px solid var(--rule); }
+section:first-of-type { border-top: 0; }
+
+.lede { font-size: var(--step-1); color: var(--ink-2); max-width: 68ch; }
+.caption { font-size: var(--step--1); color: var(--muted); max-width: 78ch; margin-top: 0.7rem; }
+
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+th, td { padding: 0.44rem 0.7rem; border-bottom: 1px solid var(--rule); }
+thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule-strong);
+  position: sticky;
+  top: 0;
+}
+th.n, td.n { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+tbody tr:hover { background: var(--surface); }
+
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1.1rem 1.2rem;
+}
+
+.grid-2 { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+svg text { font-family: var(--font-sans); fill: var(--muted); font-size: 11px; }
+svg .axis { stroke: var(--rule); stroke-width: 1; }
+svg .zero { stroke: var(--rule-strong); stroke-width: 1; }
+svg .val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
