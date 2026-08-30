@@ -17,3 +17,6 @@ web/node_modules/
 web/.next/
 web/out/
 .DS_Store
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
+web/.playwright-mcp/
