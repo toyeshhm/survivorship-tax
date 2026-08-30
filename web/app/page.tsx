@@ -404,7 +404,7 @@ export default function Page() {
                   <thead><tr><th>Control</th><th className="n">Gross Sharpe</th><th>Expected</th></tr></thead>
                   <tbody>
                     <tr>
-                      <td>Gaussian placebo signal</td>
+                      <td>Gaussian placebo (50 draws)</td>
                       <td className="n">{f3(nc.placebo_sharpe_gross as number)}</td>
                       <td>≈ 0 ✓</td>
                     </tr>
@@ -428,10 +428,30 @@ export default function Page() {
               </div>
               <p className="caption">
                 The permutation null centres on {f3(perm.null_mean)} with a standard deviation
-                of {f2(perm.null_sd)}. Against that spread the staled signal and the honest
-                signal are indistinguishable, which is itself a finding: at this sample size
-                the difference between using this month&rsquo;s momentum and using a
-                two-month-old copy of it is noise.
+                of {f2(perm.null_sd)}; the placebo averages {f3(nc.placebo_sharpe_gross as number)}{" "}
+                over {nc.placebo_n_draws as number} draws. Both sit where a correct null
+                belongs. Against that spread the staled signal and the honest signal are
+                indistinguishable, which is itself a finding: at this sample size the
+                difference between using this month&rsquo;s momentum and a two-month-old copy
+                of it is noise.
+              </p>
+              <h3 style={{ marginTop: "1.4rem" }}>Why the first test was wrong</h3>
+              <p className="caption" style={{ marginTop: "0.4rem" }}>
+                An earlier version of this permutation test charged transaction costs to both
+                arms and reported p = 0.002, with the null centred at −0.77. The cause is
+                measurable: permuting the signal destroys its month-to-month persistence, so
+                the permuted book turns over{" "}
+                <strong className="num" style={{ fontSize: "1em" }}>
+                  {f2(nc.permuted_turnover_mean as number)}×
+                </strong>{" "}
+                a year against the real signal&rsquo;s{" "}
+                <strong className="num" style={{ fontSize: "1em" }}>
+                  {f2(nc.real_turnover as number)}×
+                </strong>
+                . Charging costs to both therefore compares a low-turnover strategy against
+                high-turnover ones and bills the difference almost entirely to the null. The
+                test was measuring the cost model. Run gross, the null recentres to{" "}
+                {f3(perm.null_mean)} and p becomes {f3(perm.p_value)}.
               </p>
             </div>
             <div>

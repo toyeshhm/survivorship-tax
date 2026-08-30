@@ -71,11 +71,11 @@ bound** on the true tax.
 | Pre-registered | Hypotheses, grid, split and decision rule committed before the run |
 | Holdout | 78 months, opened once, after parameters were fixed on training data |
 | Trials logged | All 42 configurations in [`results/trials.csv`](results/trials.csv), with git SHA and config hash |
-| Permutation test | Within-date signal permutation, 1,000 draws, p = **0.268** |
+| Permutation test | Within-date signal permutation, 1,000 draws, p = **0.285** |
 | Backtest overfitting | CSCV, PBO = **0.53**, in-sample→out-of-sample slope = **−0.43** |
 | Deflated Sharpe | E[max Sharpe] under the null over 42 trials = **0.33**, which exceeds anything found |
 | Attribution | FF5 + UMD, Newey-West errors at 5 lags |
-| Negative controls | Gaussian placebo = 0.050; permutation null mean = 0.001 |
+| Negative controls | Gaussian placebo = 0.030 over 50 draws; permutation null mean = 0.013 |
 | Power | Minimum detectable Sharpe stated up front: **0.43** |
 
 ### Two things that did not work, reported rather than buried
@@ -90,9 +90,13 @@ grid, with **break-even cost** reported as the assumption-free statistic.
 **The first permutation test was wrong.** Permuting the signal destroys the month-to-month
 persistence of the weights, which roughly doubles turnover. Charging costs then compares a
 low-turnover real signal against high-turnover random ones, so the test measures the cost
-model rather than the signal. It reported p = 0.002. Run correctly on gross returns, the
-same test reports **p = 0.268**, and the null recentres from −0.77 to 0.001. The
-"significant" result was an artifact of the test.
+model rather than the signal. It reported p = 0.002.
+
+The mechanism is now measured rather than asserted: the permuted book turns over
+**21.6× a year against the real signal's 7.31×**, so the cost charge lands almost
+entirely on the null. Run correctly on gross returns, the same test reports **p =
+0.285** and the null recentres from −0.77 to 0.013. The "significant" result was an
+artifact of the test.
 
 ## Reproduce
 

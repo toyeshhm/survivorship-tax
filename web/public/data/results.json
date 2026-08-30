@@ -11186,15 +11186,15 @@
  "inference": {
   "permutation": {
    "observed": 0.155203,
-   "p_value": 0.267732,
-   "null_mean": 0.000527,
-   "null_sd": 0.264468,
-   "null_q95": 0.447652,
+   "p_value": 0.284715,
+   "null_mean": 0.013024,
+   "null_sd": 0.266195,
+   "null_q95": 0.478674,
    "n_draws": 1000.0
   },
   "sharpe_ci95": [
-   -0.269625,
-   0.664444
+   -0.254685,
+   0.675852
   ]
  },
  "period_effect": {
@@ -11220,11 +11220,15 @@
   }
  },
  "negative_controls": {
-  "placebo_sharpe_gross": 0.049646,
+  "placebo_sharpe_gross": 0.029812,
+  "placebo_sharpe_sd": 0.242221,
+  "placebo_n_draws": 50.0,
   "stale_signal_sharpe_gross": 0.211879,
   "leaked_signal_sharpe_gross": 0.175262,
   "honest_sharpe_gross": 0.155203,
-  "placebo_turnover": 7.311572,
+  "real_turnover": 7.311572,
+  "placebo_turnover": 21.720678,
+  "permuted_turnover_mean": 21.613501,
   "note": "The leakage probe is weak on real data because momentum is highly autocorrelated month to month, so next month's signal resembles this month's. The decisive leakage evidence is tests/test_no_lookahead.py, which plants a contemporaneous-only relationship the engine must fail to exploit."
  },
  "sensitivity": {
@@ -11428,8 +11432,8 @@
   }
  },
  "meta": {
-  "generated_at": "2026-08-30T00:31:25.862813+00:00",
-  "git_sha": "unknown",
+  "generated_at": "2026-08-30T00:42:18.155487+00:00",
+  "git_sha": "bb0b70a",
   "config_hash": "4e9507429916",
   "seed": 20260829,
   "sample": [
@@ -11438,6 +11442,6 @@
   ],
   "train_end": "2019-12-31",
   "n_months": 174,
-  "runtime_s": 95.2
+  "runtime_s": 111.4
  }
 }
