@@ -13,23 +13,49 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+      # The runner's system interpreter is externally managed, so `uv pip
+      # install --system` is refused. Build an explicit venv instead.
       - name: Install
-        run: uv pip install --system -e ".[dev]"
+        run: |
+          uv venv --python 3.12 .venv
+          uv pip install --python .venv/bin/python -e ".[dev]"
       - name: Lint
-        run: ruff check src tests scripts
+        run: .venv/bin/python -m ruff check src tests scripts
       - name: Format check
-        run: ruff format --check src tests scripts
+        run: .venv/bin/python -m ruff format --check src tests scripts
       - name: Typecheck
-        run: mypy
+        run: .venv/bin/python -m mypy
       - name: Test
-        run: pytest -q
+        run: .venv/bin/python -m pytest -q
 
   pipeline:
-    # The unit tests can pass on a pipeline that produces nothing. This job proves
-    # the study still runs end to end on synthetic panels.
+    # Unit tests can pass on a pipeline that produces nothing. This job runs the
+    # real engine, ladder, and statistics over synthetic panels.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-      - run: uv pip install --system -e ".[dev]"
-      - run: python scripts/smoke_pipeline.py
+        with:
+          enable-cache: true
+      - name: Install
+        run: |
+          uv venv --python 3.12 .venv
+          uv pip install --python .venv/bin/python -e ".[dev]"
+      - name: End-to-end smoke
+        run: .venv/bin/python scripts/smoke_pipeline.py
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run build
