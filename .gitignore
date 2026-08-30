@@ -1,0 +1,19 @@
+# Data is fetched, never committed: it is large, and redistribution of vendor
+# price data is not ours to grant. `make data` rebuilds it from scratch.
+data/raw/
+*.parquet
+!results/trial_returns.parquet
+
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+web/node_modules/
+web/.next/
+web/out/
+.DS_Store

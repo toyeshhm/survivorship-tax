@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "The Survivorship Tax: measuring how much of a factor backtest is an artifact of its own shortcuts"
+message: "If you use this software or its findings, please cite it."
+type: software
+authors:
+  - family-names: Medikonda
+    given-names: Toyeshh
+repository-code: "https://github.com/toyeshhm/survivorship-tax"
+license: MIT
+year: 2026
