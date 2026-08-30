@@ -15,7 +15,7 @@ from svtax import costs as C
 from svtax import inference, pipeline, risk
 from svtax import metrics as M
 from svtax import stats as S
-from svtax.backtest import BacktestConfig
+from svtax.backtest import BacktestConfig, BacktestResult
 from svtax.config import DEFAULT, Config
 from svtax.ladder import build_ladder, ladder_frame
 from svtax.trials import TrialLog
@@ -194,10 +194,10 @@ def main(cfg: Config = DEFAULT) -> None:
     z_primary = pipeline.standardized(study, "mom_12_1", f, naive=False)
     base_cfg = BacktestConfig(signal="mom_12_1", scheme="decile", formation=f)
 
-    def run_with(zz: pd.DataFrame, *, net: bool) -> pd.Series:
+    def _result(zz: pd.DataFrame) -> BacktestResult:
         from svtax.backtest import run as _run
 
-        res = _run(
+        return _run(
             cfg=base_cfg,
             z=zz,
             mask=study.mask_pit,
@@ -210,6 +210,9 @@ def main(cfg: Config = DEFAULT) -> None:
             start=cfg.sample_start,
             end=cfg.sample_end,
         )
+
+    def run_with(zz: pd.DataFrame, *, net: bool) -> pd.Series:
+        res = _result(zz)
         return res.net if net else res.gross
 
     # The permutation test runs on GROSS returns by necessity. Permuting the signal
@@ -217,6 +220,11 @@ def main(cfg: Config = DEFAULT) -> None:
     # turnover; charging costs would then compare a low-turnover real signal against
     # high-turnover random ones, and the test would measure the cost model rather
     # than the signal. Costs are addressed separately, by the break-even analysis.
+    placebo = pd.DataFrame(
+        rng.standard_normal(z_primary.shape),
+        index=z_primary.index,
+        columns=z_primary.columns,
+    )
     obs_gross = M.sharpe(runner(base_cfg).gross)
     perm = inference.permutation_test(
         z_primary, obs_gross, lambda zz: run_with(zz, net=False), cfg.n_permutations, rng
@@ -240,16 +248,45 @@ def main(cfg: Config = DEFAULT) -> None:
 
     # ---- negative controls ----
     print("negative controls ...", flush=True)
-    placebo = pd.DataFrame(
-        rng.standard_normal(z_primary.shape), index=z_primary.index, columns=z_primary.columns
-    )
+    placebo_draws = [
+        M.sharpe(
+            run_with(
+                pd.DataFrame(
+                    rng.standard_normal(z_primary.shape),
+                    index=z_primary.index,
+                    columns=z_primary.columns,
+                ),
+                net=False,
+            )
+        )
+        for _ in range(50)
+    ]
     # Controls are reported gross, for the same reason as the permutation test.
     results["negative_controls"] = {
-        "placebo_sharpe_gross": M.sharpe(run_with(placebo, net=False)),
+        # A single placebo draw is not a control: its sampling standard deviation is
+        # the same ~0.26 as the permutation null, so any one draw lands anywhere in
+        # that range. Report the distribution over many draws instead.
+        "placebo_sharpe_gross": float(np.mean(placebo_draws)),
+        "placebo_sharpe_sd": float(np.std(placebo_draws, ddof=1)),
+        "placebo_n_draws": float(len(placebo_draws)),
         "stale_signal_sharpe_gross": M.sharpe(run_with(z_primary.shift(2), net=False)),
         "leaked_signal_sharpe_gross": M.sharpe(run_with(z_primary.shift(-1), net=False)),
         "honest_sharpe_gross": obs_gross,
-        "placebo_turnover": float(runner(replace(base_cfg, apply_costs=False)).ann_turnover),
+        # Turnover of the real signal against permuted and placebo ones. Permuting
+        # destroys the month-to-month persistence of the weights, so the permuted book
+        # trades far more. This is precisely why the first version of the permutation
+        # test, which charged costs to both arms, measured the cost model rather than
+        # the signal: the charge landed almost entirely on the null.
+        "real_turnover": float(_result(z_primary).ann_turnover),
+        "placebo_turnover": float(_result(placebo).ann_turnover),
+        "permuted_turnover_mean": float(
+            np.mean(
+                [
+                    _result(inference.permute_within_date(z_primary, rng)).ann_turnover
+                    for _ in range(25)
+                ]
+            )
+        ),
         "note": (
             "The leakage probe is weak on real data because momentum is highly "
             "autocorrelated month to month, so next month's signal resembles this "
