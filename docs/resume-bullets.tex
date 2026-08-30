@@ -1,0 +1,33 @@
+% ---------------------------------------------------------------------------
+% The Survivorship Tax - resume entry
+% Every number below is reproducible from results/results.json.
+% ---------------------------------------------------------------------------
+
+\section{Projects}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {The Survivorship Tax \textbar{} Quantitative Factor Research}{Aug. 2026}
+      {Independent Research Project \textbar{} Python, pandas, statsmodels}{Austin, TX}
+      \resumeItemListStart
+        \resumeItem{Built a point-in-time S\&P 500 backtesting engine (2012--2026, 174 months, 42 logged configurations) that isolates how much of a factor strategy's reported Sharpe is produced by methodology rather than signal}
+        \resumeItem{Decomposed a 78\% Sharpe decay (0.378 $\rightarrow$ 0.084) into named causes: survivorship-biased universe construction 68\%, transaction costs 24\%, same-close execution 7\%}
+        \resumeItem{Measured free-data survivorship bias directly, finding only 71.9\% of the true 2012 index is still priceable, and showed the bias \textit{inverts sign} across signals, inflating momentum but deflating low-volatility}
+        \resumeItem{Implemented Deflated Sharpe, CSCV probability of backtest overfitting (0.53), Newey-West factor attribution, and a within-date permutation test from source papers; caught and corrected a confounded test that had reported spurious significance}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+% ---------------------------------------------------------------------------
+% THREE-BULLET VARIANT (if space is tight)
+% ---------------------------------------------------------------------------
+%
+%    \resumeSubheading
+%      {The Survivorship Tax \textbar{} Quantitative Factor Research}{Aug. 2026}
+%      {Independent Research Project \textbar{} Python, pandas, statsmodels}{Austin, TX}
+%      \resumeItemListStart
+%        \resumeItem{Built a point-in-time S\&P 500 backtesting engine (2012--2026, 174 months) decomposing a 78\% Sharpe decay (0.378 $\rightarrow$ 0.084) into survivorship bias 68\%, costs 24\%, and execution lag 7\%}
+%        \resumeItem{Showed only 71.9\% of the true 2012 index remains priceable in free data, and that the resulting bias inverts sign across signals, inflating momentum while deflating low-volatility}
+%        \resumeItem{Implemented Deflated Sharpe, CSCV overfitting probability (0.53), and Newey-West attribution from source papers; found the surviving edge indistinguishable from noise (permutation $p = 0.28$)}
+%      \resumeItemListEnd
