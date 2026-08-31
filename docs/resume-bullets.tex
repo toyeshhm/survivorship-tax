@@ -1,11 +1,10 @@
 % ---------------------------------------------------------------------------
 % Resume entry. Every number is reproducible from results/results.json.
-% Repo name stays "survivorship-tax"; the resume title describes the work.
+% Uses \resumeProjectHeading (2 args) - the standard projects macro.
 % ---------------------------------------------------------------------------
 
-    \resumeSubheading
-      {Quantifying Hidden Bias in Stock Trading Backtests}{Aug. 2026}
-      {Quantitative Researcher \& Sole Author}{Austin, TX}
+    \resumeProjectHeading
+      {\textbf{Measuring Bias in Stock Trading Backtests} $|$ \emph{Python, pandas, statsmodels}}{Aug. 2026}
       \resumeItemListStart
         \resumeItem{Built a backtesting engine for stock-selection strategies using 14 years of S\&P 500 data}
         \resumeItem{Showed 78\% of a strategy's apparent edge came from testing flaws (Sharpe 0.38 $\rightarrow$ 0.08)}
@@ -13,12 +12,19 @@
         \resumeItem{Applied overfitting and significance tests; found no strategy beat random chance}
       \resumeItemListEnd
 
-% --- Cut bullet 4 first if you need the space ------------------------------
+% --- If \resumeProjectHeading is not defined, add this to your preamble ----
+% \newcommand{\resumeProjectHeading}[2]{
+%     \item
+%     \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+%       \small#1 & #2 \\
+%     \end{tabular*}\vspace{-7pt}
+% }
 
-% --- Alternative titles ----------------------------------------------------
-% {Measuring Survivorship Bias in Equity Factor Backtests}
-% {Equity Factor Backtesting Engine \& Bias Analysis}
+% --- Shorter titles, if the line still wraps -------------------------------
+% {Stock Backtest Bias Analysis}
+% {Quantifying Backtest Bias}
 
 % --- With links (if your template defines \href) ---------------------------
-%       {\href{https://github.com/toyeshhm/survivorship-tax}{Quantifying Hidden Bias in Stock Trading Backtests}}{Aug. 2026}
-%       {Quantitative Researcher \textbar{} \href{https://survivorship-tax.vercel.app}{Live Dashboard}}{Austin, TX}
+%     {\textbf{\href{https://github.com/toyeshhm/survivorship-tax}{Measuring Bias in Stock Trading Backtests}} $|$ \emph{\href{https://survivorship-tax.vercel.app}{Live Dashboard}}}{Aug. 2026}
+
+% --- Cut bullet 4 first if you need the space ------------------------------
